@@ -17,29 +17,24 @@ window.onload = function () {
       xhr.send();
    }
    getJSON('https://spreadsheets.google.com/feeds/list/1PEfrN0lE3LlOaKiTs_2FoOVqlUeFPd2_R6iWbX8uHfI/od6/public/values?alt=json', function(err, data){
-      console.log(data);
       if (err !== null){
          console.log('ERROR: ' + err);
       }
       else{
-        // data = data['feed']['entry'];
-         //data = data.feed.entry;
+         data = data.feed.entry;
          console.log(data);
          document.querySelector('.shop-container').innerHTML = showGoods(data);
-         console.log(data[0].content.$t);
       }
    });
 
    function showGoods(data){
-      for (let i = 0; i < data.length; i++) {
-         '<div class="col-lg-3 col-md-2"><div class="goods"><h5>' + data[i].content.$t['name'] + '</h5><img src="" alt=""><p class="cost"></p><p class="amount"></p></div></div>'
-         
-
-
+      let itemData = '';
+      for (i = 0; i < data.length; i++) {
+         if(data[i].gsx$show.$t != 0){
+            itemData += '<div class="col-lg-3 col-md-6 text-center"><div class="goods"><h5>' + data[i].gsx$name.$t + '</h5><img src="' + data[i].gsx$img.$t + '" alt="img"><p class="cost">' + data[i].gsx$cost.$t + '</p><p class="amount"></p><p><button class="good-button btn btn-success" value="' + data[i].gsx$id.$t + '">Buy</button></p></div></div>'
+         }
       }
-         
-
-
+      return itemData;     
    }
 
 
