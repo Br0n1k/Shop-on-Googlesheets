@@ -28,10 +28,6 @@ window.onload = function () {
          goodsArray = arrFilter(data);
          console.log(data);
          console.log(goodsArray);
-         for (let x = 0; x < goodsArray.length; x++) {
-            let element = goodsArray[x];
-            console.log(element);
-         }
          document.querySelector('.shop-container').innerHTML = showGoods(data);
       }
    });
