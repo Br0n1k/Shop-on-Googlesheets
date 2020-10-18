@@ -1,4 +1,4 @@
-window.onload = function () {
+// window.onload = function () {
    let getJSON = function(url, callback){
       let xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
@@ -36,7 +36,7 @@ window.onload = function () {
       let itemData = '';
       for (i = 0; i < data.length; i++) {
          if(data[i].gsx$show.$t != 0){
-            itemData += '<div class="col-lg-3 col-md-6 text-center"><div class="goods"><h5>' + data[i].gsx$name.$t + '</h5><img src="' + data[i].gsx$img.$t + '" alt="img"><p class="cost">' + data[i].gsx$cost.$t + '</p><p class="amount"></p><p><button class="good-button btn btn-success" name="add-to-cart" value="' + data[i].gsx$id.$t + '">Buy</button></p></div></div>'
+            itemData += '<div class="col-lg-3 col-md-6 text-center"><div class="goods"><h5>' + data[i].gsx$name.$t + '</h5><img src="' + data[i].gsx$img.$t + '" alt="img"><p class="cost">' + data[i].gsx$cost.$t + '</p><p class="amount"></p><p><button class="good-button btn btn-success" name="add-to-cart" value="' + data[i].gsx$id.$t + '" onclick=addToCart(this);>Buy</button></p></div></div>'
          }
       }
       return itemData;     
@@ -55,12 +55,18 @@ window.onload = function () {
       return out;
    }
 
-   document.onclick = function(e){
-      if(e.target.name == 'add-to-cart'){
-         let itemId = e.target.value;
+   // document.onclick = function(e){
+   //    if(e.target.name == 'add-to-cart'){
+   //       let itemId = e.target.value;
+   //       let itemPrice; // добавить в корзину короч все
+   //       console.log(e.target);
+   //    }
+   // }
+
+   function addToCart(item){
+         let itemId = item.value;
          let itemPrice; // добавить в корзину короч все
-         console.log(e.target);
-      }
+      console.log(item.value);
    }
 
 
@@ -79,4 +85,16 @@ window.onload = function () {
 
 
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+   // }
