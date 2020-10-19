@@ -36,7 +36,7 @@
       let itemData = '';
       for (i = 0; i < data.length; i++) {
          if(data[i].gsx$show.$t != 0){
-            itemData += '<div class="col-lg-3 col-md-6 text-center"><div class="goods"><h5>' + data[i].gsx$name.$t + '</h5><img src="' + data[i].gsx$img.$t + '" alt="img"><p class="cost">' + data[i].gsx$cost.$t + '</p><p class="amount"></p><p><button class="good-button btn btn-success" name="add-to-cart" value="' + data[i].gsx$id.$t + '" onclick=addToCart(this);>Buy</button></p></div></div>'
+            itemData += '<div class="col-lg-3 col-md-6 text-center"><div class="goods"><h5>' + data[i].gsx$name.$t + '</h5><img src="' + data[i].gsx$img.$t + '" alt="img"><p class="cost">' + data[i].gsx$cost.$t + '</p><p class="amount"></p><p><button class="good-button btn btn-success" name="add-to-cart" value="' + data[i].gsx$id.$t + '" onclick=addToCart(this.value);>Buy</button></p></div></div>'
          }
       }
       return itemData;     
@@ -64,11 +64,34 @@
    // }
 
    function addToCart(item){
-         let itemId = item.value;
-         let itemPrice; // добавить в корзину короч все
-      console.log(item.value);
+      if (cart[item] !== undefined){
+         cart[item]++;
+      }
+      else{
+         cart[item] = 1;
+      }
+      showCart();
+      // document.querySelector('#cart-out').innerHTML = 
+      //  '<div class="col-lg-3 col-md-6 text-center cart"><div>class="goods"><h5>' + goodsArray[item].name + '</h5><img src="' + goodsArray[item].image + '" alt="img"><p class="cost">' + goodsArray[item].cost + '</p><p class="amount"></p></div></div>';
    }
 
+   function showCart(){
+
+      let cartOut = document.querySelector('#cart-out');
+      cartOut.innerHTML = '';
+
+      let sum = 0;
+
+      for ( let key in cart){
+         let div = '<div>';
+         div += goodsArray[key].name + ': ' + cart[key] + 'шт ';
+         div += goodsArray[key].cost * cart[key] + '$';
+         sum += goodsArray[key].cost * cart[key];
+         div += '</div>';
+         cartOut.innerHTML += div;
+      }
+      cartOut.innerHTML += '<div><b>итого: ' + sum + '$</b></div>';
+   }
 
 
 

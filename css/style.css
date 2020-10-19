@@ -37,3 +37,6 @@ a{
 .goods img{
    height: 180px;
 }
+#cart-out{
+   padding: 40px;
+}
