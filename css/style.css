@@ -39,4 +39,7 @@ a{
 }
 #cart-out{
    padding: 40px;
+   margin-top: 20px;
+   display: inline-block;
+   border: 1px solid grey;
 }
