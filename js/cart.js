@@ -71,6 +71,7 @@
          cart[item] = 1;
       }
       showCart();
+      localStorage.setItem('cart', JSON.stringify(cart));
       // document.querySelector('#cart-out').innerHTML = 
       //  '<div class="col-lg-3 col-md-6 text-center cart"><div>class="goods"><h5>' + goodsArray[item].name + '</h5><img src="' + goodsArray[item].image + '" alt="img"><p class="cost">' + goodsArray[item].cost + '</p><p class="amount"></p></div></div>';
    }
@@ -93,10 +94,13 @@
       cartOut.innerHTML += '<div><b>итого: ' + sum + '$</b></div>';
    }
 
-
-
-
-
+   function loadFromStorage(){
+      if(localStorage.getItem('cart') != undefined){
+         cart = JSON.parse(localStorage.getItem('cart'));
+      }
+      console.log(cart);
+   }
+   loadFromStorage();
 
 
 
