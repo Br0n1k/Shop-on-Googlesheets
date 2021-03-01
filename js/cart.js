@@ -102,9 +102,10 @@
       }
       cartOut.innerHTML += '<div><b>итого: ' + sum + '$</b></div>';
    }
-
+   
    
    console.log(goodsArray);
+   console.log(goo);
 
 
 
