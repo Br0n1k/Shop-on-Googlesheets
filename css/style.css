@@ -34,7 +34,7 @@ a{
 
 /* goods */
 
-.goods img{
+.goods img, .product img{
    height: 180px;
 }
 #cart-out{
