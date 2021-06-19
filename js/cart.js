@@ -86,7 +86,6 @@
       //  '<div class="col-lg-3 col-md-6 text-center cart"><div>class="goods"><h5>' + goodsArray[item].name + '</h5><img src="' + goodsArray[item].image + '" alt="img"><p class="cost">' + goodsArray[item].cost + '</p><p class="amount"></p></div></div>';
    }
    function showCart(){
-      console.log(goodsArray);
       let cartOut = document.querySelector('#cart-out');
       cartOut.innerHTML = '';
 
@@ -95,7 +94,10 @@
       for ( let key in cart){
          let div = '<div>';
          div += goodsArray[key].name + ': ' + cart[key] + 'шт ';
+         div += ` <button class="minus-goods" value="${key}" onclick=minusFromCart(this.value);>-</button> `;
+         div += ` <button class="plus-goods" value="${key}" onclick=plusFromCart(this.value);>+</button> `;
          div += goodsArray[key].cost * cart[key] + '$';
+         div += ` <button class="delete-goods" value="${key}" onclick=deleteFromCart(this.value);>x</button>`;
          sum += goodsArray[key].cost * cart[key];
          div += '</div>';
          cartOut.innerHTML += div;
@@ -104,11 +106,27 @@
    }
    
    
-   console.log(goodsArray);
-   console.log(goo);
 
-
-
+   function deleteFromCart(data){
+      delete cart[data];
+      showCart();
+      localStorage.setItem('cart', JSON.stringify(cart));
+   }
+   function minusFromCart(data){
+      if(cart[data] -1 == 0){
+         deleteFromCart(data);
+      }
+      else{
+         cart[data]--;
+      }
+      showCart();
+      localStorage.setItem('cart', JSON.stringify(cart));
+   }
+   function plusFromCart(data){
+      cart[data]++;
+      showCart();
+      localStorage.setItem('cart', JSON.stringify(cart));
+   }
 
 
 

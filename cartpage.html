@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Cart-page</title>
+   <link rel="stylesheet" href="css/bootstrap.min.css">
+   <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+      <!-- navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+         <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+                  class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+               <ul class="navbar-nav mr-auto mb-lg-0">
+                  <li class="nav-item">
+                     <a class="nav-link active" aria-current="page" href="/index.html">Home</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link" href="#">Link</a>
+                  </li>
+               </ul>
+               <ul class="navbar-nav ml-auto mb-lg-0">
+                  <li class="nav-item">
+                     <a href="/index.html" class="nav-link px-lg-3 left">На главную</a>
+                  </li>
+                  <li class="nav-item">
+                     <a href="/cartpage.html" class="nav-link px-lg-3">Корзина <svg width="20px" height="20px" viewBox="0 0 16 16"
+                           class="bi bi-cart3 ml-1" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                           <path fill-rule="evenodd"
+                              d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                        </svg>
+                     </a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <!-- navbar-end -->
+      <div class="wrapper">
+         <div id="cart-out"></div>
+      </div>
+   
+
+   <script src="js/bootstrap.min.js"></script>
+   <script>
+   let goodsArray = {};
+   let cart = {};
+
+   function loadFromStorage(){
+      if(localStorage.getItem('cart') != undefined){
+         cart = JSON.parse(localStorage.getItem('cart'));
+      }
+      console.log(cart);
+   }
+   loadFromStorage();
+
+   let getJSON = function(url, callback){
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true);
+      xhr.responseType = 'json';
+
+      xhr.onload = function(){
+         let status = xhr.status;
+         if (status == 200){
+            callback(null, xhr.response);
+         }
+         else{
+            callback(status, xhr.response);
+            console.log(callback(status, xhr.response));
+         }
+      };
+      xhr.send();
+   }
+   
+   getJSON('https://spreadsheets.google.com/feeds/list/1PEfrN0lE3LlOaKiTs_2FoOVqlUeFPd2_R6iWbX8uHfI/od6/public/values?alt=json', function(err, data){
+      if (err !== null){
+         console.log('ERROR: ' + err);
+      }
+      else{
+         data = data.feed.entry;
+         goodsArray = arrFilter(data);
+         console.log(data);
+         console.log(goodsArray);
+         showCart();
+      }
+   });
+
+   function arrFilter(arr){
+      let out = {};
+      for (let i = 0; i < arr.length; i++) {
+         let temp = {};
+         temp['id'] = arr[i].gsx$id.$t;
+         temp['name'] = arr[i].gsx$name.$t;
+         temp['image'] = arr[i].gsx$img.$t;
+         temp['cost'] = arr[i].gsx$cost.$t;
+         out[temp['id']] = temp;
+      }
+      return out;
+   }
+
+
+      function showCart(){
+      let cartOut = document.querySelector('#cart-out');
+      cartOut.innerHTML = '';
+
+      let sum = 0;
+
+      for ( let key in cart){
+         let div = '<div>';
+         div += goodsArray[key].name + ': ' + cart[key] + 'шт ';
+         div += ` <button class="minus-goods" value="${key}" onclick=minusFromCart(this.value);>-</button> `;
+         div += ` <button class="plus-goods" value="${key}" onclick=plusFromCart(this.value);>+</button> `;
+         div += goodsArray[key].cost * cart[key] + '$';
+         div += ` <button class="delete-goods" value="${key}" onclick=deleteFromCart(this.value);>x</button>`;
+         sum += goodsArray[key].cost * cart[key];
+         div += '</div>';
+         cartOut.innerHTML += div;
+      }
+      cartOut.innerHTML += '<div><b>итого: ' + sum + '$</b></div>';
+   }
+   
+   
+
+   function deleteFromCart(data){
+      delete cart[data];
+      showCart();
+      localStorage.setItem('cart', JSON.stringify(cart));
+   }
+   function minusFromCart(data){
+      if(cart[data] -1 == 0){
+         deleteFromCart(data);
+      }
+      else{
+         cart[data]--;
+      }
+      showCart();
+      localStorage.setItem('cart', JSON.stringify(cart));
+   }
+   function plusFromCart(data){
+      cart[data]++;
+      showCart();
+      localStorage.setItem('cart', JSON.stringify(cart));
+   }
+   showCart();
+   </script>
+</body>
+</html>
